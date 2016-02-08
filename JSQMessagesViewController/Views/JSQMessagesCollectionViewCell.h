@@ -19,7 +19,6 @@
 #import <UIKit/UIKit.h>
 
 #import "JSQMessagesLabel.h"
-#import "JSQMessagesCellTextView.h"
 #import "JSQMessagesCellLabel.h"
 
 @class JSQMessagesCollectionViewCell;

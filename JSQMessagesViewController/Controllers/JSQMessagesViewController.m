@@ -458,16 +458,27 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     cell.delegate = collectionView;
 
     if (!isMediaMessage) {
-        cell.textView.text = [messageItem text];
+        cell.textLabel.text = [messageItem text];
+
+        cell.textLabel.delegate = self;
 
         if ([UIDevice jsq_isCurrentDeviceBeforeiOS8]) {
             //  workaround for iOS 7 textView data detectors bug
-            cell.textView.text = nil;
-            cell.textView.attributedText = [[NSAttributedString alloc] initWithString:[messageItem text]
-                                                                           attributes:@{ NSFontAttributeName : collectionView.collectionViewLayout.messageBubbleFont }];
+
+            cell.textLabel.text = nil;
+            NSMutableAttributedString *mutableAttributedString = cell.textLabel.attributedText.mutableCopy;
+            if (mutableAttributedString) {
+                [mutableAttributedString addAttribute:NSFontAttributeName
+                                                value:collectionView.collectionViewLayout.messageBubbleFont
+                                                range:NSMakeRange(0, [mutableAttributedString length])];
+            }
+            else {
+                cell.textLabel.text = (id)[[NSAttributedString alloc] initWithString:[messageItem text]
+                                                                          attributes:@{ NSFontAttributeName : collectionView.collectionViewLayout.messageBubbleFont }];
+            }
         }
 
-        NSParameterAssert(cell.textView.text != nil);
+        NSParameterAssert(cell.textLabel.text != nil);
 
         id<JSQMessageBubbleImageDataSource> bubbleImageDataSource = [collectionView.dataSource collectionView:collectionView messageBubbleImageDataForItemAtIndexPath:indexPath];
         cell.messageBubbleImageView.image = [bubbleImageDataSource messageBubbleImage];
@@ -517,7 +528,7 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
         cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, bubbleTopLabelInset, 0.0f, 0.0f);
     }
 
-    cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
+    cell.textLabel.enabledTextCheckingTypes = NSTextCheckingAllTypes;
 
     cell.backgroundColor = [UIColor clearColor];
     cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
@@ -571,13 +582,6 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     }
 
     self.selectedIndexPathForMenu = indexPath;
-
-    //  textviews are selectable to allow data detectors
-    //  however, this allows the 'copy, define, select' UIMenuController to show
-    //  which conflicts with the collection view's UIMenuController
-    //  temporarily disable 'selectable' to prevent this issue
-    JSQMessagesCollectionViewCell *selectedCell = (JSQMessagesCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    selectedCell.textView.selectable = NO;
 
     return YES;
 }
@@ -713,6 +717,18 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     [textView resignFirstResponder];
 }
 
+
+- (void)attributedLabel:(TTTAttributedLabel *)label
+   didSelectLinkWithURL:(NSURL *)url
+{
+    if ([[url scheme] isEqualToString:@"username"]) {
+        NSLog(@"Mention tapped!");
+    }
+    else if ([[url scheme] isEqualToString:@"hashtag"]) {
+        NSLog(@"Hashtag tapped!");
+    }
+}
+
 #pragma mark - Notifications
 
 - (void)jsq_handleDidChangeStatusBarFrameNotification:(NSNotification *)notification
@@ -749,14 +765,6 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
 
 - (void)jsq_didReceiveMenuWillHideNotification:(NSNotification *)notification
 {
-    if (!self.selectedIndexPathForMenu) {
-        return;
-    }
-
-    //  per comment above in 'shouldShowMenuForItemAtIndexPath:'
-    //  re-enable 'selectable', thus re-enabling data detectors if present
-    JSQMessagesCollectionViewCell *selectedCell = (JSQMessagesCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:self.selectedIndexPathForMenu];
-    selectedCell.textView.selectable = YES;
     self.selectedIndexPathForMenu = nil;
 }
 

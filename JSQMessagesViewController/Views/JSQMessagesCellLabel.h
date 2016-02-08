@@ -1,7 +1,5 @@
 //
-//  Created by Jesse Squires
-//  http://www.jessesquires.com
-//
+// Created by Ivan Vavilov
 //
 //  Documentation
 //  http://cocoadocs.org/docsets/JSQMessagesViewController
@@ -16,12 +14,11 @@
 //  Released under an MIT license: http://opensource.org/licenses/MIT
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <TTTAttributedLabel/TTTAttributedLabel.h>
 
-/**
- *  `JSQMessagesCellTextView` is a subclass of `UITextView` that is used to display text
- *  in a `JSQMessagesCollectionViewCell`.
- */
-@interface JSQMessagesCellTextView : UITextView
+@interface JSQMessagesCellLabel : TTTAttributedLabel
+
+
 
 @end

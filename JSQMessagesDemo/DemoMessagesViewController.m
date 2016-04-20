@@ -515,14 +515,15 @@
     if (!msg.isMediaMessage) {
         
         if ([msg.senderId isEqualToString:self.senderId]) {
-            cell.textView.textColor = [UIColor blackColor];
+            cell.textLabel.textColor = [UIColor blackColor];
         }
         else {
-            cell.textView.textColor = [UIColor whiteColor];
+            cell.textLabel.textColor = [UIColor whiteColor];
         }
         
-        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
-                                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+        /*
+        cell.textLabel.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
+                                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };*/
     }
     
     return cell;
@@ -634,6 +635,11 @@
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"Tapped message bubble!");
+}
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didDoubleTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Double tapped message bubble!");
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation

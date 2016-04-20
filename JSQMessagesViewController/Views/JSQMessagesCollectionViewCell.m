@@ -61,7 +61,11 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
 
 @property (weak, nonatomic, readwrite) UITapGestureRecognizer *tapGestureRecognizer;
 
+@property (weak, nonatomic, readwrite) UITapGestureRecognizer *doubleTapGestureRecognizer;
+
 - (void)jsq_handleTapGesture:(UITapGestureRecognizer *)tap;
+
+- (void)jsq_handleDoubleTapGesture:(UITapGestureRecognizer *)tap;
 
 - (void)jsq_updateConstraint:(NSLayoutConstraint *)constraint withConstant:(CGFloat)constant;
 
@@ -131,6 +135,14 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     [self addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
     self.tapGestureRecognizer.cancelsTouchesInView = NO;
+    
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jsq_handleDoubleTapGesture:)];
+    [doubleTap setNumberOfTapsRequired:2];
+    [self addGestureRecognizer:doubleTap];
+    self.doubleTapGestureRecognizer = doubleTap;
+    self.doubleTapGestureRecognizer.cancelsTouchesInView = NO;
+    
+    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.doubleTapGestureRecognizer];
 }
 
 #pragma mark - Collection view cell
@@ -353,6 +365,15 @@ static NSMutableSet *jsqMessagesCollectionViewCellActions = nil;
     }
     else {
         [self.delegate messagesCollectionViewCellDidTapCell:self atPosition:touchPt];
+    }
+}
+
+- (void)jsq_handleDoubleTapGesture:(UITapGestureRecognizer *)tap
+{
+    CGPoint touchPt = [tap locationInView:self];
+    
+    if (CGRectContainsPoint(self.messageBubbleContainerView.frame, touchPt)) {
+        [self.delegate messagesCollectionViewCellDidDoubleTapMessageBubble:self];
     }
 }
 

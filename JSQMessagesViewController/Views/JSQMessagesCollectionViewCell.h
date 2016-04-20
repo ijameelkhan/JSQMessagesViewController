@@ -46,6 +46,13 @@
 - (void)messagesCollectionViewCellDidTapMessageBubble:(JSQMessagesCollectionViewCell *)cell;
 
 /**
+ *  Tells the delegate that the message bubble of the cell has been double tapped.
+ *
+ *  @param cell The cell that received the tap touch event.
+ */
+- (void)messagesCollectionViewCellDidDoubleTapMessageBubble:(JSQMessagesCollectionViewCell *)cell;
+
+/**
  *  Tells the delegate that the cell has been tapped at the point specified by position.
  *
  *  @param cell The cell that received the tap touch event.

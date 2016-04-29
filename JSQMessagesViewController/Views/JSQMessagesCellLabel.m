@@ -73,7 +73,14 @@
                                               range:NSMakeRange(0, [self.text length])
                                          usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                                              if (result) {
+                                                 
+                                                 
                                                  NSDictionary *attributes = @{(id)kCTForegroundColorAttributeName: [UIColor whiteColor], (id)kCTUnderlineStyleAttributeName: @(kCTUnderlineStyleSingle)};
+                                                 self.inactiveLinkAttributes= attributes;
+                                                 
+                                                 NSDictionary *activeAttributes = @{(id)kCTForegroundColorAttributeName: [UIColor grayColor], (id)kCTUnderlineStyleAttributeName: @(kCTUnderlineStyleSingle)};
+                                                 self.activeLinkAttributes= activeAttributes;
+                                                 
                                                  [self addLinkWithTextCheckingResult:result attributes:attributes];
                                              }
                                          }];
@@ -91,7 +98,16 @@
                                               range:NSMakeRange(0, [self.text length])
                                          usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                                              if (result) {
+                                                 
+                                                 
+                                                 
+                                                 
                                                  NSDictionary *attributes = @{(id)kCTForegroundColorAttributeName: [UIColor whiteColor], (id)kCTUnderlineStyleAttributeName: @(kCTUnderlineStyleSingle)};
+                                                 self.inactiveLinkAttributes= attributes;
+                                                 
+                                                 NSDictionary *activeAttributes = @{(id)kCTForegroundColorAttributeName: [UIColor grayColor], (id)kCTUnderlineStyleAttributeName: @(kCTUnderlineStyleSingle)};
+                                                 self.activeLinkAttributes= activeAttributes;
+                                                 
                                                  [self addLinkWithTextCheckingResult:result attributes:attributes];
                                              }
                                          }];
